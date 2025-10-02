@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 from snowflake.snowpark.functions import col
-from snowflake.snowpark import Row
 
 # --------------------------
 # App title & intro
@@ -71,12 +70,9 @@ if ingredients_list:
         if not name_on_order:
             st.error("❌ Please enter a name for your Smoothie before submitting.")
         else:
-            # Create a Row object for the order
-            new_row = Row(
-                INGREDIENTS=ingredients_string,
-                NAME_ON_ORDER=name_on_order,
-                ORDER_FILLED=False
-            )
-            # Insert into the orders table
-            session.table("smoothies.public.orders").insert([new_row])
+            my_insert_stmt = f"""
+                INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER, ORDER_FILLED)
+                VALUES ('{ingredients_string}', '{name_on_order}', FALSE)
+            """
+            session.sql(my_insert_stmt).collect()
             st.success("🎉 Your Smoothie is ordered!")
