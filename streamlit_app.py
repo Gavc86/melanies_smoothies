@@ -36,7 +36,7 @@ if ingredients_list:
                 sf_df = st.dataframe(data = smoothiefroot_response.json(),use_container_width = True)
     
     # Build the INSERT statement
-    my_insert_stmt = f"""
+my_insert_stmt = f"""
         INSERT INTO smoothies.public.orders (ingredients, name_on_order, order_filled)
         VALUES ('{ingredients_string}', '{name_on_order}', FALSE)
     """
