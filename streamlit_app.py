@@ -40,9 +40,6 @@ ingredients_list = st.multiselect(
 # If ingredients selected, show nutrition info
 # --------------------------
 if ingredients_list:
-    # Combine into one string for DB insert
-    ingredients_string = ', '.join(ingredients_list)
-
     st.subheader("🥗 Nutrition Information")
     for fruit_chosen in ingredients_list:
         # Lookup API search value
@@ -61,7 +58,7 @@ if ingredients_list:
     # --------------------------
     st.subheader("📝 Order Summary")
     st.write(f"👤 Name on Order: **{name_on_order if name_on_order else '(not entered)'}**")
-    st.write(f"🍓 Ingredients: {ingredients_string}")
+    st.write(f"🍓 Ingredients: {' '.join(ingredients_list)}")
 
     # --------------------------
     # Button to submit order
@@ -70,6 +67,9 @@ if ingredients_list:
         if not name_on_order:
             st.error("❌ Please enter a name for your Smoothie before submitting.")
         else:
+            # Store ingredients as space-separated string (no commas)
+            ingredients_string = " ".join(ingredients_list)
+
             my_insert_stmt = f"""
                 INSERT INTO smoothies.public.orders (INGREDIENTS, NAME_ON_ORDER, ORDER_FILLED)
                 VALUES ('{ingredients_string}', '{name_on_order}', FALSE)
